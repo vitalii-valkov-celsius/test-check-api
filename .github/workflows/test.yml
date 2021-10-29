@@ -51,9 +51,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 check_run_id: check.data.id,
-                output: {
-                    annotations: batch
-                }
+                'output.annotations': batch,
               })
               console.log(update.data)
             }
