@@ -85,7 +85,7 @@ const getBatches = (array, batchSize) => {
 };
 
 const getAnnotations = (levels, watchFiles) => {
-  const coverage = JSON.parse(fs.readFileSync(path.join(rootPath, "coverage/json.json")));
+  const coverage = JSON.parse(fs.readFileSync(path.join(rootPath, "coverage/json.json"), "utf8"));
 
   const annotations = [];
 
@@ -117,11 +117,20 @@ const getAnnotations = (levels, watchFiles) => {
 };
 
 const getText = () => {
-  return fs.readFileSync(path.join(rootPath, "coverage/text.txt"));
+  return fs.readFileSync(path.join(rootPath, "coverage/text.txt"), "utf8");
 };
 
 const getSummary = () => {
-  return fs.readFileSync(path.join(rootPath, "coverage/text-summary.txt"));
+  return fs.readFileSync(path.join(rootPath, "coverage/text-summary.txt"), "utf8");
 };
 
-module.exports = { getAnnotations, mergeLines, TrackLines, getUncoveredLines, getAnnotationLevel, getBatches, getText, getSummary };
+module.exports = {
+  getAnnotations,
+  mergeLines,
+  TrackLines,
+  getUncoveredLines,
+  getAnnotationLevel,
+  getBatches,
+  getText,
+  getSummary,
+};
