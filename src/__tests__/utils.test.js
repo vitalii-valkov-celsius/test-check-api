@@ -11,3 +11,7 @@ it("subtract", () => {
 it("divide", () => {
   expect(divide(10, 5)).toBe(2);
 });
+
+it("divide by 0", () => {
+  expect(divide(10, 0)).toBe(0);
+});
