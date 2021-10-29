@@ -42,7 +42,7 @@ jobs:
             const files = await github.rest.pulls.listFiles({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: context.issue.number,,
+              pull_number: context.issue.number,
             });
 
             console.log(JSON.stringify(check.data, null ,2))
