@@ -16,7 +16,7 @@ jobs:
       - uses: actions/github-script@v5
         with:
           script: |
-            const { getAnnotations } = require('./github-actions/get-annotations')
+            const { getAnnotations, getBatches } = require('./github-actions/get-annotations')
 
             const watchFiles = (await github.rest.pulls.listFiles({
               owner: context.repo.owner,
@@ -29,8 +29,6 @@ jobs:
               { glob: "**", level: "notice" },
             ]
 
-            console.log(getAnnotations(levels, watchFiles))
-
             const check = await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -39,9 +37,23 @@ jobs:
               conclusion: 'success',
               name: 'jest-coverage',
               output: {
-                  title: 'Jest Coverage',
+                  title: 'Jest Coverage Report',
                   summary: 'All good',
                   text: 'But may be better',
               }
             })
 
+            const annotations = getAnnotations(levels, watchFiles)
+            const annotationBatches = getBatches(annotations, 1)
+
+            for(batch of annotationBatches){
+              const update = await github.rest.checks.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                check_run_id: check.data.id,
+                output: {
+                    annotations: batch
+                }
+              })
+              console.log(update.data)
+            }

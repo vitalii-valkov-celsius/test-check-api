@@ -108,4 +108,12 @@ const getAnnotations = (levels, watchFiles) => {
   return annotations;
 };
 
-module.exports = { getAnnotations, mergeLines, TrackLines, getUncoveredLines, getAnnotationLevel };
+const getBatches = (array, batchSize) => {
+  const result = [];
+  for (let i = 0; i < array.length; i += batchSize) {
+    result.push(array.slice(i, i + batchSize));
+  }
+  return result;
+};
+
+module.exports = { getAnnotations, mergeLines, TrackLines, getUncoveredLines, getAnnotationLevel, getBatches };

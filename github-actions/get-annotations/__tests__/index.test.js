@@ -1,4 +1,4 @@
-const { mergeLines, TrackLines, getUncoveredLines, getAnnotationLevel } = require("../");
+const { mergeLines, TrackLines, getUncoveredLines, getAnnotationLevel, getBatches } = require("../");
 
 describe("mergeLines", () => {
   it("should return empty array if minLine is -1", () => {
@@ -105,5 +105,15 @@ describe("getAnnotationLevel", () => {
         "src/file.js"
       )
     ).toBe("notice");
+  });
+});
+
+describe("getBatches", () => {
+  it("should return 0 batches if array is empty", () => {
+    expect(getBatches([], 10)).toEqual([]);
+  });
+
+  it("should return batches ", () => {
+    expect(getBatches([1, 2, 3, 4, 5], 2)).toEqual([[1, 2], [3, 4], [5]]);
   });
 });
