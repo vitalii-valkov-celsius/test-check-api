@@ -7,9 +7,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - run: yarn install
+      - run: yarn test:coverage
+      - run: |
+          cd github-actions/get-annotations
+          yarn install
+
       - uses: actions/github-script@v5
         with:
           script: |
+            const { getAnnotations } = require('./github-actions/get-annotations')
+
+            const watchFiles = (await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              per_page: 100,
+            })).data.map(f=>f.filename);
+
+            const levels = [
+              { glob: "**", level: "notice" },
+            ]
+
+            console.log(getAnnotations(levels, watchFiles))
+
             const check = await github.rest.checks.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -21,31 +42,6 @@ jobs:
                   title: 'Jest Coverage',
                   summary: 'All good',
                   text: 'But may be better',
-                  annotations: [
-                    {
-                      path: "src/test.js",
-                      start_line: 1,
-                      end_line: 3,
-                      annotation_level: "notice",
-                      message: "Uncovered line"
-                    }
-                  ]
               }
             })
 
-            const checks = await github.rest.checks.listForRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: context.ref,
-            });
-
-            const watchFiles = (await github.rest.pulls.listFiles({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              pull_number: context.issue.number,
-              per_page: 100,
-            })).data.map(f=>f.filename);
-
-            console.log(JSON.stringify(check.data, null ,2))
-            console.log(JSON.stringify(checks.data, null, 2))
-            console.log(JSON.stringify(watchFiles, null, 2))

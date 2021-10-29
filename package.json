@@ -1,0 +1,38 @@
+{
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest --coverage"
+  },
+  "dependencies": {
+    "jest": "^27.3.1"
+  },
+  "jest": {
+    "coverageReporters": [
+      [
+        "json",
+        {
+          "file": "json.json"
+        }
+      ],
+      [
+        "json-summary",
+        {
+          "file": "json-summary.json"
+        }
+      ],
+      [
+        "text",
+        {
+          "file": "text.txt"
+        }
+      ],
+      [
+        "text-summary",
+        {
+          "file": "text-summary.txt"
+        }
+      ],
+      "text"
+    ]
+  }
+}
