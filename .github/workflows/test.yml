@@ -39,12 +39,13 @@ jobs:
               ref: context.ref,
             });
 
-            const files = await github.rest.pulls.listFiles({
+            const watchFiles = (await github.rest.pulls.listFiles({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.issue.number,
-            });
+              per_page: 100,
+            })).data.map(f=>f.filename);
 
             console.log(JSON.stringify(check.data, null ,2))
             console.log(JSON.stringify(checks.data, null, 2))
-            console.log(JSON.stringify(files.data, null, 2))
+            console.log(JSON.stringify(watchFiles, null, 2))
