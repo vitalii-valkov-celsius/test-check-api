@@ -51,7 +51,12 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 check_run_id: check.data.id,
-                'output.annotations': batch,
+                output: {
+                  title: 'Jest Coverage Report',
+                  summary: 'All good',
+                  text: 'But may be better',
+                  annotations: batch,
+                }
               })
               console.log(update.data)
             }
