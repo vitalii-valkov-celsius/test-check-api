@@ -16,4 +16,5 @@ jobs:
               ref: context.ref,
             });
 
-            console.log(JSON.stringify(checks, null, 2))
+            console.log(JSON.stringify(context, null ,2))
+            console.log(JSON.stringify(checks.data, null, 2))
