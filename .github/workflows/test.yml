@@ -24,8 +24,8 @@ jobs:
                   annotations: [
                     {
                       path: "src/test.js",
-                      start_line: 2,
-                      end_line: 2,
+                      start_line: 1,
+                      end_line: 3,
                       annotation_level: "notice",
                       message: "Uncovered line"
                     }
