@@ -10,11 +10,25 @@ jobs:
       - uses: actions/github-script@v5
         with:
           script: |
+            const check = await github.res.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              status: 'completed',
+              head_sha: context.payload.pull_request?.head.sha ?? context.sha,
+              conclusion: 'success',
+              name: 'jest-coverage',
+              output: {
+                  title: 'Jest Coverage',
+                  summary: 'All good',
+                  text: 'But may be better'
+              }
+            })
+
             const checks = await github.rest.checks.listForRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: context.ref,
             });
 
-            console.log(JSON.stringify(context, null ,2))
+            console.log(JSON.stringify(check.data, null ,2))
             console.log(JSON.stringify(checks.data, null, 2))
