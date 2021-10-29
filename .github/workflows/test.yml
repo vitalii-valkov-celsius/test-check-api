@@ -26,7 +26,7 @@ jobs:
             })).data.map(f=>f.filename);
 
             const levels = [
-              { glob: "**", level: "notice" },
+              { glob: "**", level: "failure" },
             ]
 
             const title = "Jest Coverage Report";
