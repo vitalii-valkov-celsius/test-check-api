@@ -34,16 +34,12 @@ jobs:
               return result
             }
 
-            const watchFilesData = (await github.rest.pulls.listFiles({
+            const watchFiles = (await github.rest.pulls.listFiles({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.issue.number,
               per_page: 100,
-            })).data
-            
-            const watchFiles = watchFilesData.map(f => f.filename);
-            const watchFilesNew = watchFilesData.map(f => [f.filename, getPatchedLines(f.patch)]);
-            console.log(watchFilesNew)
+            })).data.map(f => [f.filename, getPatchedLines(f.patch)]);
 
             const levels = [
               { glob: "**", level: "failure" },
