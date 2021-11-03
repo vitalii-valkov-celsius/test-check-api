@@ -60,7 +60,7 @@ const getAnnotationLevel = (levels, filePath) => {
   return "failure";
 };
 
-const getUncoveredLines = (fileCoverage) => {
+const getUncoveredLines = (fileCoverage, watchLines) => {
   const uncoveredLines = TrackLines();
 
   const { s: statementsCoverage, statementMap } = fileCoverage;
@@ -73,7 +73,19 @@ const getUncoveredLines = (fileCoverage) => {
     }
   });
 
-  return mergeLines(uncoveredLines.getMap(), uncoveredLines.getMinLine(), uncoveredLines.getMaxLine());
+  const watchedUncoveredLines = TrackLines();
+  const uncoveredLinesMap = uncoveredLines.getMap();
+  for ([startLine, endLine] of watchLines) {
+    for (let i = startLine; i <= endLine; i++) {
+      if (uncoveredLinesMap[i]) watchedUncoveredLines.push(i);
+    }
+  }
+
+  return mergeLines(
+    watchedUncoveredLines.getMap(),
+    watchedUncoveredLines.getMinLine(),
+    watchedUncoveredLines.getMaxLine()
+  );
 };
 
 const getBatches = (array, batchSize) => {
@@ -93,16 +105,16 @@ const getAnnotations = (levels, watchFiles) => {
     .map(([filePath, fileCoverage]) => {
       return [path.relative(rootPath, filePath), fileCoverage];
     })
-    .filter(([filePath]) => watchFiles.includes(filePath))
     .forEach(([filePath, fileCoverage]) => {
-      if (!watchFiles.includes(filePath)) {
+      const watchedFile = watchFiles.find((f) => f[0] === filePath);
+      if (!watchedFile) {
         return;
       }
 
       const level = getAnnotationLevel(levels, filePath);
       if (level === "ignore") return;
 
-      const lines = getUncoveredLines(fileCoverage);
+      const lines = getUncoveredLines(fileCoverage, watchedFile[1]);
       lines.forEach((line) => {
         annotations.push({
           path: filePath,
