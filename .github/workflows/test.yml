@@ -18,6 +18,22 @@ jobs:
           script: |
             const { getAnnotations, getBatches, getText, getSummary } = require('./github-actions/get-annotations')
 
+            const getPatchedLines = (str) => {
+              const result = [];
+              const regex=/@@ \-[0-9]+,[0-9]+ \+([0-9]+),([0-9]+) @@/g;
+
+              let match;
+              do {
+                match = regex.exec(str);
+                if (match) {
+                  const [, startLine, endLine] = match;
+                  result.push([startLine, endLine]);
+                }
+              } while(match)
+
+              return result
+            }
+
             const watchFilesData = (await github.rest.pulls.listFiles({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -25,8 +41,9 @@ jobs:
               per_page: 100,
             })).data
             
-            const watchFiles = watchFilesData.map(f=>f.filename);
-            console.log(watchFilesData)
+            const watchFiles = watchFilesData.map(f => f.filename);
+            const watchFilesNew = watchFilesData.map(f => [f.filename, getPatchedLines(f.patch)]);
+            console.log(watchFilesNew)
 
             const levels = [
               { glob: "**", level: "failure" },
