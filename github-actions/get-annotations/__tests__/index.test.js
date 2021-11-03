@@ -83,7 +83,23 @@ it("getUncoveredLines", () => {
     s: { 0: 1, 1: 1, 2: 1, 3: 0, 4: 1, 5: 0, 6: 0, 7: 0, 8: 1 },
   };
 
-  expect(getUncoveredLines(report)).toEqual([
+  expect(
+    getUncoveredLines(report, [
+      [0, 5],
+      [6, 10],
+    ])
+  ).toEqual([
+    { end: 6, start: 6 },
+    { end: 10, start: 10 },
+  ]);
+
+  expect(
+    getUncoveredLines(report, [
+      [0, 5],
+      [6, 10],
+      [11, 11],
+    ])
+  ).toEqual([
     { end: 6, start: 6 },
     { end: 11, start: 10 },
   ]);

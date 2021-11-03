@@ -18,12 +18,28 @@ jobs:
           script: |
             const { getAnnotations, getBatches, getText, getSummary } = require('./github-actions/get-annotations')
 
+            const getPatchedLines = (str) => {
+              const result = [];
+              const regex=/@@ \-[0-9]+,[0-9]+ \+([0-9]+),([0-9]+) @@/g;
+
+              let match;
+              do {
+                match = regex.exec(str);
+                if (match) {
+                  const [, startLine, endLine] = match;
+                  result.push([Number(startLine), Number(startLine)+Number(endLine)-1]);
+                }
+              } while(match)
+
+              return result
+            }
+
             const watchFiles = (await github.rest.pulls.listFiles({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.issue.number,
               per_page: 100,
-            })).data.map(f=>f.filename);
+            })).data.map(f => [f.filename, getPatchedLines(f.patch)]);
 
             const levels = [
               { glob: "**", level: "failure" },
