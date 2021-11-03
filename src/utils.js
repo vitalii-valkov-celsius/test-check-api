@@ -1,3 +1,7 @@
+const multiply = (a, b) => {
+  return a * b;
+};
+
 const add = (a, b) => {
   return a + b;
 };
@@ -12,4 +16,8 @@ const divide = (a, b) => {
   return result;
 };
 
-module.exports = { add, subtract, divide };
+const power = (a, b) => {
+  return a ** b;
+};
+
+module.exports = { add, subtract, divide, multiply, power };

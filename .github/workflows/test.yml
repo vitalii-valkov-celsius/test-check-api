@@ -18,12 +18,15 @@ jobs:
           script: |
             const { getAnnotations, getBatches, getText, getSummary } = require('./github-actions/get-annotations')
 
-            const watchFiles = (await github.rest.pulls.listFiles({
+            const watchFilesData = (await github.rest.pulls.listFiles({
               owner: context.repo.owner,
               repo: context.repo.repo,
               pull_number: context.issue.number,
               per_page: 100,
-            })).data.map(f=>f.filename);
+            })).data
+            
+            const watchFiles = watchFilesData.map(f=>f.filename);
+            console.log(watchFilesData)
 
             const levels = [
               { glob: "**", level: "failure" },
