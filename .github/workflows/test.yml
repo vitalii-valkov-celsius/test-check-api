@@ -27,7 +27,7 @@ jobs:
                 match = regex.exec(str);
                 if (match) {
                   const [, startLine, endLine] = match;
-                  result.push([Number(startLine), Number(endLine)]);
+                  result.push([Number(startLine), Number(startLine)+Number(endLine)-1]);
                 }
               } while(match)
 
